@@ -1,0 +1,60 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>Desafio XP</mat-card-title>
+    <mat-card-subtitle>Financeiro</mat-card-subtitle>
+  </mat-card-header>
+
+  <form>
+
+    <mat-form-field>
+      <mat-label>Valor</mat-label>
+      <input matInput type="text"
+             [(ngModel)]="ValorMoeda"
+             name="valorMoeda"
+             [currencyMask]="{ prefix: prefixo, thousands: '.', decimal: ',', allowNegative: false }">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Selecione a moeda</mat-label>
+      <mat-select [(ngModel)]="MoedaOrigem" name="moeda-origem">
+        <mat-option *ngFor="let moeda of moedas" [value]="moeda.value">
+          {{ moeda.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Selecione a moeda</mat-label>
+      <mat-select [(ngModel)]="MoedaPara" name="moeda-para">
+        <mat-option *ngFor="let moeda of moedas" [value]="moeda.value">
+          {{ moeda.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <button type="button" mat-raised-button color="primary" (click)="capturarDados()">
+        Converter
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="ValorMoeda <= 0">
+    <p>Digite um valor maior que 0 para converter</p>
+  </div>
+
+  <div *ngIf="MoedaOrigem === MoedaPara && ValorMoeda > 0">
+    <p>Escolha moedas diferentes para converter</p>
+  </div>
+
+  <div *ngIf="resultado">
+    <p>
+      {{ resultado.rates?.[MoedaPara] | currency:MoedaPara:'symbol':'1.2-2' }}
+    </p>
+    <p>Data: {{ resultado.date | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+  </div>
+
+  <div *ngIf="erroApi" style="color:red; font-weight:bold; margin-top:10px;">
+  {{ erroApi }}
+</div>
+</mat-card>
